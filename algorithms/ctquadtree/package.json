@@ -1,0 +1,36 @@
+{
+  "name": "ct-quadtree",
+  "version": "0.0.1",
+  "description": "Library for creating and searching Quad Trees",
+  "main": "quadtree.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "nyc --reporter=lcov --reporter=text-summary mocha",
+    "test-watch": "mocha --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodingTrain/QuadTree.git"
+  },
+  "keywords": [
+    "quadtree",
+    "quad",
+    "tree",
+    "coding",
+    "train"
+  ],
+  "author": "Coding Train Community",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CodingTrain/QuadTree/issues"
+  },
+  "homepage": "https://github.com/CodingTrain/QuadTree#readme",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^9.1.3",
+    "nyc": "^15.0.0",
+    "sinon": "^4.4.9"
+  }
+}

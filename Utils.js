@@ -1,6 +1,7 @@
-const Quadtree = require('./algorithms/quadtree');
+const thQuadtree = require('./algorithms/quadtree');
 const AabbTree = require('./algorithms/aabbtree');
 const planck = require('planck')
+const ctQuadTree = require('./algorithms/ctquadtree/quadtree');
 const fs = require('fs')
 
 /**
@@ -45,8 +46,26 @@ saveBoxesInJson = function (fileName, objects) {
     });
 }
 
-createQuadTree = function (world, boxes) {
-    var quadTree = new Quadtree(world, 4);
+createCtQuadTree = function (world, boxes) {
+    var bound = new ctQuadTree.Rectangle(world.x,world.y,world.width,world.height)
+    var tree = new ctQuadTree.QuadTree(bound)
+    var objects = []
+    for(var i=0;i<boxes.length;i++) {
+        var p = new ctQuadTree.Point(boxes[i].x, boxes[i].y)
+        tree.insert(p)
+        var box = new ctQuadTree.Rectangle(boxes[i].x,boxes[i].y,boxes[i].w,boxes[i].h)
+        objects.push(box)
+    }
+    return {tree: tree, objects: objects};
+
+}
+queryCtQuadTree = function(tree, obj) {
+    var box = new ctQuadTree.Rectangle(obj.x,obj.y,obj.w,obj.h)
+    return tree.query(box)
+}
+
+createThQuadTree = function (world, boxes) {
+    var quadTree = new thQuadtree(world, 4);
 
     var quadObjects = [];
 
@@ -64,7 +83,7 @@ createQuadTree = function (world, boxes) {
     return {quadTree: quadTree, quadObjects: quadObjects};
 }
 
-queryQuadTree = function (tree, obj) {
+queryThQuadTree = function (tree, obj) {
     var collides = []
     var all = tree.retrieve(obj);
     for (var j=0;j<all.length;j++) {
@@ -122,7 +141,8 @@ module.exports = {
     randMinMax,
     toMs,
     boxes,
-    createQuadTree,
+    createThQuadTree,
     createAabbTree,
-    queryQuadTree
+    queryThQuadTree,
+    createCtQuadTree
   };
