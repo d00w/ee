@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+	<head>
+		<title>quadtree-js Simple Demo</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	</head>
+	<body>
+
+		<div class="outer">
+
+			
+			<div style="text-align:center;" id="canvasContainer">
+				<canvas id="canvas"/>
+			</div>
+
+				<div style="text-align:center;">
+					Total Objects: <span id="cnt_total">0</span><br />
+					Candidates: <span id="cnt_cand">0</span> (<span id="cnt_perc">0</span>%)
+				</div>
+			</div>
+		</div>
+
+		<!-- quadtree lib and script -->
+		<script src="../algorithms/quadtree.min.js"></script>
+		<!-- CDN alternative: -->
+		<!-- <script src="https://cdn.jsdelivr.net/npm/@timohausmann/quadtree-js/quadtree.min.js"></script> -->
+		<script src="./world1_boxes2.js"></script>
+		<script>
+
+		(function(w, M) {
+			
+			w.requestAnimFrame = (function () {
+				return  w.requestAnimationFrame ||
+					w.webkitRequestAnimationFrame ||
+					w.mozRequestAnimationFrame ||
+					w.oRequestAnimationFrame ||
+					w.msRequestAnimationFrame ||
+					function (callback) {
+						w.setTimeout(callback, 1000 / 60);
+					};
+			})();
+			
+            var myObjects = [];
+
+			
+			var ctx = document.getElementById('canvas').getContext('2d');
+
+			var cnt_total = document.querySelector('#cnt_total');
+			
+
+			var updateTotal = function() {
+                cnt_total.innerHTML = myObjects.length;
+            }
+			
+			/*
+			 * draw all objects
+			 */
+			var drawObjects = function() {
+				
+				var obj;
+				
+				for(var i=0;i<myObjects.length;i=i+1) {
+					
+					obj = myObjects[i];
+					
+					if(obj.check) {
+						ctx.fillStyle = 'rgba(48,255,48,0.5)';
+						ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
+					} else {
+						ctx.fillStyle = 'rgba(0,0,0,0.1)';
+						ctx.strokeStyle = '#000';
+						ctx.strokeRect(obj.x, obj.y, obj.width, obj.height);
+						ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
+					}
+				}
+			};
+
+			/*
+			 * our main loop
+			 */
+			var loop = function() {
+				
+				
+				ctx.clearRect(data.world.x, data.world.y, data.world.width, data.world.height);
+				
+				//reset myObjects check flag
+				for(var i=0;i<myObjects.length;i=i+1) {
+					
+					myObjects[i].check = false;
+				}
+				
+				drawObjects();
+				
+				requestAnimFrame(loop);
+			};
+
+            for(var i=0;i<data.boxes.length;i++) {
+                rect = {
+                    x : data.boxes[i].x,
+                    y : data.boxes[i].y,
+                    width : data.boxes[i].w,
+                    height : data.boxes[i].h,
+                    check : false
+                };
+                myObjects.push(rect);
+            }
+            updateTotal();
+
+			//init first loop
+			loop();
+			
+			document.getElementById('canvas').width = data.world.width + data.world.x+1;
+			document.getElementById('canvas').height = data.world.height + data.world.y+1;
+
+		})(window, Math);
+		</script>
+	</body>
+</html>
