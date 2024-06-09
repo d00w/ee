@@ -1,1 +1,2 @@
 # ee
+npm install planck
