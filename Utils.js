@@ -1,5 +1,6 @@
 const Quadtree = require('./algorithms/quadtree');
-const AabbTree = require("./algorithms/aabbtree");
+const AabbTree = require('./algorithms/aabbtree');
+const planck = require('planck')
 const fs = require('fs')
 
 /**
@@ -63,6 +64,21 @@ createQuadTree = function (world, boxes) {
     return {quadTree: quadTree, quadObjects: quadObjects};
 }
 
+queryQuadTree = function (tree, obj) {
+    var collides = []
+    var all = tree.retrieve(obj);
+    for (var j=0;j<all.length;j++) {
+      //compare obj with all[j]
+      if (obj.x < all[j].x + all[j].width &&
+        obj.x + obj.width > all[j].x &&
+        obj.y < all[j].y + all[j].height &&
+        obj.y + obj.height > all[j].y) {
+          collides.push(all[j]);
+      }
+    }
+    return collides
+}
+
 createAabbTree = function (world, boxes) {
     var aabbTree = new AabbTree.AABBTreeNode(
         new AabbTree.AxisAlignedBox(
@@ -88,6 +104,19 @@ createAabbTree = function (world, boxes) {
     return {aabbTree: aabbTree, aabbObjects: aabbObjects};
 }
 
+createPlanckAabbTree = function (boxes) {
+    var tree = new planck.DynamicTree()
+    var objects = [];
+    for(var i=0;i<boxes.length;i++) {
+        var box = {
+            lowerBound: {x:boxes[i].x, y:boxes[i].y},
+            upperBound: {x:boxes[i].x + boxes[i].w, y: boxes[i].y + boxes[i].h}
+        }
+        tree.createProxy(box)
+        objects.push(box)
+    }
+    return {tree: tree, objects: objects};
+}
 
 module.exports = {
     randMinMax,
@@ -95,4 +124,5 @@ module.exports = {
     boxes,
     createQuadTree,
     createAabbTree,
+    queryQuadTree
   };

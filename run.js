@@ -26,27 +26,48 @@ var quadTreeObj = createQuadTree(world, boxes);
 
 time = process.hrtime(time);
 
-console.log('create quad tree '+Utils.toMs(time) +'ms');
+console.log('QUAD 1: '+Utils.toMs(time) +'ms');
 
 time = process.hrtime();
 
 for(var i=0;i<quadTreeObj.quadObjects.length;i++) {
-    quadTreeObj.quadTree.retrieve(quadTreeObj.quadObjects[i]);
+    var all = quadTreeObj.quadTree.retrieve(quadTreeObj.quadObjects[i]);
+    queryQuadTree(quadTreeObj.quadTree, quadTreeObj.quadObjects[i])
 }
 
 time = process.hrtime(time);
-console.log('retrieve quad tree '+Utils.toMs(time) +'ms');
+console.log('QUAD 2: '+Utils.toMs(time) +'ms');
+
+/*******************************************
+ * measure planck aabb tree
+ * ****************************************/
+var time = process.hrtime();
+
+var planck = createPlanckAabbTree(boxes)
+
+time = process.hrtime(time);
+
+console.log('AABB 1: '+Utils.toMs(time) +'ms');
+time = process.hrtime();
+
+for(var i=0;i<planck.objects.length;i++) {
+  planck.tree.query(planck.objects[i], function(nodeId) {})
+}
+time = process.hrtime(time);
+console.log('AABB 2: '+Utils.toMs(time) +'ms');
 
 /*******************************************
  * measure aabb tree
  * ****************************************/
+
+/*
 var time = process.hrtime();
 
 var aabbTreeObj = createAabbTree(world, boxes);
 
 time = process.hrtime(time);
 
-console.log('create aabb tree '+Utils.toMs(time) +'ms');
+console.log('AABB 1: '+Utils.toMs(time) +'ms');
 
 time = process.hrtime();
 
@@ -55,4 +76,22 @@ for(var i=0;i<aabbTreeObj.aabbObjects.length;i++) {
 }
 
 time = process.hrtime(time);
-console.log('retrieve aabb tree '+Utils.toMs(time) +'ms');
+console.log('AABB 2: '+Utils.toMs(time) +'ms');
+*/
+
+
+/* single test
+
+planck.tree.query({
+  lowerBound: {x:100, y:100},
+  upperBound: {x:200, y:200}
+  }, function(nodeId) {console.log(planck.tree.getFatAABB(nodeId))})
+
+console.log(queryQuadTree(quadTreeObj.quadTree,{
+    x : 100,
+    y : 100,
+    width : 100,
+    height : 100,
+    check : false
+  }))
+*/
