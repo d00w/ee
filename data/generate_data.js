@@ -57,7 +57,7 @@ for (var i = 3; i < 21; i++) {
     test_data.push({type:"concerntrated", boxes: p1.concat(p2), world: world});
 }
 
-for (var i = 3; i < 20; i++) {
+for (var i = 3; i < 21; i++) {
     var p1 = Utils.generateAABBs(world, SIZE_MIN, SIZE_MAX, i * 5000 / 2)
     var p2 = Utils.generateAABBs(cWorld, SIZE_MIN, SIZE_MAX, i * 5000 / 2)
     test_data.push({type:"concerntrated", boxes: p1.concat(p2), world: world});
