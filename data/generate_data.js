@@ -1,30 +1,74 @@
 const Utils = require("../Utils");
+const fs =  require('fs');
 
+// Experiment properties
 var XMIN = 1;
 var YMIN = 1;
-var WIDTH = 1000;
-var HEIGHT = 600;
+var WORLD_WIDTH = 1000;
+var WORLD_HEIGHT = 1000;
 var SIZE_MIN = 10;
 var SIZE_MAX = 10;
 
-var world1 = {
+
+// Create world
+var world = {
     x: XMIN,
     y: YMIN,
-    width: WIDTH,
-    height: HEIGHT
+    width: WORLD_WIDTH,
+    height: WORLD_HEIGHT
 }
-var w1b1 = {boxes: Utils.boxes(world1, SIZE_MIN, SIZE_MAX, 200), world: world1};
-var w1b2 = {boxes: Utils.boxes(world1, SIZE_MIN, SIZE_MAX, 400), world: world1};
-var w1b3 = {boxes: Utils.boxes(world1, SIZE_MIN, SIZE_MAX, 600), world: world1};
-var w1b4 = {boxes: Utils.boxes(world1, SIZE_MIN, SIZE_MAX, 800), world: world1};
-var w1b5 = {boxes: Utils.boxes(world1, SIZE_MIN, SIZE_MAX, 1000), world: world1};
 
-var concentratedBoxes = Utils.boxes(world1, SIZE_MIN, SIZE_MAX, 600).concat(Utils.boxes({x:300,y:200,width:200,height:100}, SIZE_MIN, SIZE_MAX, 400));
-var w1b6 = {boxes: concentratedBoxes, world:world1};
+var cWorld = {
+    x: XMIN + WORLD_WIDTH/3,
+    y: YMIN + WORLD_HEIGHT/3,
+    width: WORLD_WIDTH/3,
+    height: WORLD_HEIGHT/3
+}
 
-saveBoxesInJson("./world1_boxes1.js", "var data="+JSON.stringify(w1b1));
-saveBoxesInJson("./world1_boxes2.js", "var data="+JSON.stringify(w1b2));
-saveBoxesInJson("./world1_boxes3.js", "var data="+JSON.stringify(w1b3));
-saveBoxesInJson("./world1_boxes4.js", "var data="+JSON.stringify(w1b4));
-saveBoxesInJson("./world1_boxes5.js", "var data="+JSON.stringify(w1b5));
-saveBoxesInJson("./world1_boxes6.js", "var data="+JSON.stringify(w1b6));
+// UNIFORM DISTRIBUTION
+// 100 to 1,000
+var u1 = []
+for (var i = 0; i < 10; i++) {
+    u1.push({boxes: Utils.generateAABBs(world, SIZE_MIN, SIZE_MAX, (i+1) * 100), world: world});
+}
+// 1,000 to 10,000
+var u2 = []
+for (var i = 0; i < 10; i++) {
+    u2.push({boxes: Utils.generateAABBs(world, SIZE_MIN, SIZE_MAX, (i+1) * 1000), world: world});
+}
+// 10,000 to 100,000
+var u3 = []
+for (var i = 0; i < 10; i++) {
+    u3.push({boxes: Utils.generateAABBs(world, SIZE_MIN, SIZE_MAX, (i+1) * 10000), world: world});
+}
+
+// CONCENTRATED DISTRIBUTION
+var c1 = []
+for (var i = 0; i < 10; i++) {
+    var p1 = Utils.generateAABBs(world, SIZE_MIN, SIZE_MAX, (i+1) * 100 / 2)
+    var p2 = Utils.generateAABBs(cWorld, SIZE_MIN, SIZE_MAX, (i+1) * 100 / 2)
+    c1.push({boxes: p1.concat(p2), world: world});
+}
+
+var c2 = []
+for (var i = 0; i < 10; i++) {
+    var p1 = Utils.generateAABBs(world, SIZE_MIN, SIZE_MAX, (i+1) * 1000 / 2)
+    var p2 = Utils.generateAABBs(cWorld, SIZE_MIN, SIZE_MAX, (i+1) * 1000 / 2)
+    c2.push({boxes: p1.concat(p2), world: world});
+}
+
+var c3 = []
+for (var i = 0; i < 10; i++) {
+    var p1 = Utils.generateAABBs(world, SIZE_MIN, SIZE_MAX, (i+1) * 10000 / 2)
+    var p2 = Utils.generateAABBs(cWorld, SIZE_MIN, SIZE_MAX, (i+1) * 10000 / 2)
+    c3.push({boxes: p1.concat(p2), world: world});
+}
+
+var test_data = {
+    uniform: [u1, u2, u3],
+    concentrated: [c1, c2, c3]
+}
+
+fs.writeFile("./test_data.js", "var data="+JSON.stringify(test_data), function(err) {
+    if (err) {console.log(err);}
+});
