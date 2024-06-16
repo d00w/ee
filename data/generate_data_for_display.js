@@ -43,3 +43,12 @@ var aabbs6 = Utils.generateAABBs(cWorld, SIZE_MIN, SIZE_MAX, 5000);
 fs.writeFile("./10k_concen_data.js", "var data="+JSON.stringify({boxes: aabbs5.concat(aabbs6), world: world}), function(err) {
     if (err) {console.log(err);}
 });
+var aabbs7 = Utils.generateAABBs(world, SIZE_MIN, SIZE_MAX, 5000);
+fs.writeFile("./5k_uniform_data.js", "var data="+JSON.stringify({boxes: aabbs7, world: world}), function(err) {
+    if (err) {console.log(err);}
+});
+var aabbs8 = Utils.generateAABBs(world, SIZE_MIN, SIZE_MAX, 2500);
+var aabbs9 = Utils.generateAABBs(cWorld, SIZE_MIN, SIZE_MAX, 2500);
+fs.writeFile("./5k_concen_data.js", "var data="+JSON.stringify({boxes: aabbs8.concat(aabbs9), world: world}), function(err) {
+    if (err) {console.log(err);}
+});
