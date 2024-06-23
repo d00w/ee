@@ -10,7 +10,7 @@ var SIZE_MIN = 10;
 var SIZE_MAX = 10;
 
 
-// Create world
+// Uniform world
 var world = {
     x: XMIN,
     y: YMIN,
@@ -18,6 +18,7 @@ var world = {
     height: WORLD_HEIGHT
 }
 
+// Concentrated world
 var cWorld = {
     x: XMIN + WORLD_WIDTH/3,
     y: YMIN + WORLD_HEIGHT/3,
@@ -45,22 +46,25 @@ for (var i = 3; i < 21; i++) {
 }
 
 // CONCENTRATED DISTRIBUTION
+// 100 to 1,000
 for (var i = 1; i < 21; i++) {
     var p1 = Utils.generateAABBs(world, SIZE_MIN, SIZE_MAX, i * 50 / 2)
     var p2 = Utils.generateAABBs(cWorld, SIZE_MIN, SIZE_MAX, i * 50 / 2)
-    test_data.push({type:"concerntrated", boxes: p1.concat(p2), world: world});
+    test_data.push({type:"concentrated", boxes: p1.concat(p2), world: world});
 }
 
+// 1,000 to 10,000
 for (var i = 3; i < 21; i++) {
     var p1 = Utils.generateAABBs(world, SIZE_MIN, SIZE_MAX, i * 500 / 2)
     var p2 = Utils.generateAABBs(cWorld, SIZE_MIN, SIZE_MAX, i * 500 / 2)
-    test_data.push({type:"concerntrated", boxes: p1.concat(p2), world: world});
+    test_data.push({type:"concentrated", boxes: p1.concat(p2), world: world});
 }
 
+// 10,000 to 100,000
 for (var i = 3; i < 21; i++) {
     var p1 = Utils.generateAABBs(world, SIZE_MIN, SIZE_MAX, i * 5000 / 2)
     var p2 = Utils.generateAABBs(cWorld, SIZE_MIN, SIZE_MAX, i * 5000 / 2)
-    test_data.push({type:"concerntrated", boxes: p1.concat(p2), world: world});
+    test_data.push({type:"concentrated", boxes: p1.concat(p2), world: world});
 }
 
 fs.writeFile("./test_data.js", "var data="+JSON.stringify(test_data), function(err) {

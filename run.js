@@ -8,87 +8,67 @@ eval(test_data)
 var result_csv = fs.openSync('result.csv', 'w')
 fs.writeSync(result_csv,'Trial,Algorithm,Data type,Number of boxes,Construction time (ms),Query time (ms)\n')
 
+// Run experiment trail
 function runTrial(t) {
 
   /*******************************************
    * Quad Tree testing
    * ****************************************/
-
   for (i in data) {
     var boxes = data[i].boxes
     var world = data[i].world
     var type = data[i].type
     var count = boxes.length
-    // Construction start time
-    var time = process.hrtime();
 
     // CONSTRUCTION OF QUAD TREE
+    var time = process.hrtime();
     var quadTree = constructQuadTree(world, boxes);
-
-    // Construction end time
     time = process.hrtime(time);
 
-    // Print result
-    fs.writeSync(result_csv,t +","+"QUAD Tree," + type + ","+count+","+Utils.toMs(time))//the line is not finished yet
-    console.log('QUAD TREE CONSTRUCTION: '+Utils.toMs(time) +'ms');
-
-    // Query start time
-    time = process.hrtime();
+    // Save result
+    fs.writeSync(result_csv,t +","+"QUAD Tree," + type + ","+count+","+Utils.toMs(time))
 
     // QUERY OF QUAD TREE
+    time = process.hrtime();
     for (var k = 0; k < quadTree.objects.length; k++) {
         queryQuadTree(quadTree.tree, quadTree.objects[k])
     }
-
-    // Query end time
     time = process.hrtime(time);
 
-    // Print result
+    // Save result
     fs.writeSync(result_csv,','+Utils.toMs(time)+'\n')
-    console.log('QUAD TREE QUERY: '+Utils.toMs(time) +'ms');
   }
 
   /*******************************************
    * AABB Tree testing
    * ****************************************/
-
-
   for (i in data) {
-
     var boxes = data[i].boxes
     var world = data[i].world
     var type = data[i].type
     var count = boxes.length
-    // Construction start time
-    var time = process.hrtime();
 
     // CONSTRUCTION OF AABB TREE
+    var time = process.hrtime();
     var aabbTree = constructAabbTree(boxes);
-
-    // Construction end time
     time = process.hrtime(time);
 
-    // Print result
+    // Save result
     fs.writeSync(result_csv,t +","+"AABB Tree," + type + ","+count+","+Utils.toMs(time))
-    console.log('AABB TREE CONSTRUCTION: '+Utils.toMs(time) +'ms');
-
-    // Query start time
-    time = process.hrtime();
 
     // QUERY OF AABB TREE
+    time = process.hrtime();
     for(k in aabbTree.objects) {
       aabbTree.tree.query(aabbTree.objects[k], function(nodeId) {})
     }
-
-    // Query end time
     time = process.hrtime(time);
 
-    // Print result
+    // Save result
     fs.writeSync(result_csv,','+Utils.toMs(time)+'\n')
-    console.log('AABB TREE QUERY: '+Utils.toMs(time) +'ms');
   }
 }
 
+// Loop for all trails
 for (var t = 1; t<=3;t++) {
   runTrial(t);
 }
